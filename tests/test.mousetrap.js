@@ -87,7 +87,7 @@ describe('Mousetrap.bind', function () {
       }
     });
 
-    it('z key does not fire when inside an input element in an open shadow dom', function() {
+    it('z key does not fire when inside an input element in an open shadow dom', function () {
       var spy = sinon.spy();
 
       var shadowHost = document.createElement('div');
@@ -104,7 +104,7 @@ describe('Mousetrap.bind', function () {
       expect(spy.callCount).to.equal(0, 'callback should not have fired');
     });
 
-    it('z key does fire when inside an input element in a closed shadow dom', function() {
+    it('z key does fire when inside an input element in a closed shadow dom', function () {
       var spy = sinon.spy();
 
       var shadowHost = document.createElement('div');
@@ -121,7 +121,7 @@ describe('Mousetrap.bind', function () {
       expect(spy.callCount).to.equal(1, 'callback should have fired once');
     });
 
-    it('keyup events should fire', function() {
+    it('keyup events should fire', function () {
       var spy = sinon.spy();
 
       Mousetrap.bind('z', spy, 'keyup');
@@ -768,5 +768,24 @@ describe('Mouestrap.addKeycodes', function () {
     expect(spy.callCount).to.equal(1, 'callback should fire for num');
 
     spy.resetHistory();
+  });
+});
+
+describe('Mousetrap.destroy', function () {
+  it('should allow you to destroy the instance', function () {
+    var spy1 = sinon.spy();
+    var mousetrap1 = new Mousetrap();
+    mousetrap1.bind('a', spy1);
+    mousetrap1.destroy();
+
+    var spy2 = sinon.spy();
+    var mousetrap2 = new Mousetrap();
+    mousetrap2.bind('a', spy2);
+
+    KeyEvent.simulate('a'.charCodeAt(0), 65);
+
+    expect(spy1.callCount).to.equal(0, 'mousetrap1 callback should never be fired');
+    expect(spy2.callCount).to.equal(1, 'mousetrap2 callback should fire once');
+    expect(Mousetrap.destroy).to.equal(undefined, 'Mousetrap should not have destroy method');
   });
 });
